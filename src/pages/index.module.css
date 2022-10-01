@@ -1,0 +1,12 @@
+.headercss{
+    background-color: blue;
+}
+
+.mint-display{
+    position: absolute;
+    transform: translate(-50%,-50%);
+    left: 50%;
+    top:50%;
+
+    border: solid 2px red;
+}

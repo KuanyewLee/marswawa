@@ -1,0 +1,20 @@
+.container{
+    position: fixed;
+    display: flex;
+    align-items: center;
+    
+    top: 0;
+    left:0;
+    right: 0;
+    height: 8vh;
+    /* width: 100%; */
+
+    background-color: aqua;
+}
+
+.container .connectWallet{
+    position: absolute; 
+    right: 2vw;
+
+    border: 2px solid blue;
+}

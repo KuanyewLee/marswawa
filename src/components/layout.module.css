@@ -1,0 +1,37 @@
+.container {
+    font-family: sans-serif;
+}
+
+.heading {
+    color: rebeccapurple;
+}
+
+.nav-links {
+    display: flex;
+    list-style: none;
+    padding-left: 0;
+}
+
+.nav-link-item {
+    padding-right: 2rem;
+}
+
+.nav-link-text {
+    color: black;
+}
+
+.background{
+    position: fixed;
+    object-fit: cover;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+    z-index: -1;
+}
+
+.header{
+    position: fixed;
+    top: 0;
+    max-height: 5vh;
+}

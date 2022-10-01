@@ -1,14 +1,16 @@
 import * as React from 'react'
+import Header from '../components/header'
 import Layout from '../components/layout'
+import MintDisplay from '../components/mintDisplay'
+import {mintDisplay} from "./index.module.css"
 
 const IndexPage = () => {
   return (
-    <Layout pageTitle="Home Page">
-      <p>I'm making this by following the Gatsby Tutorial.</p>
+    <Layout>
+      <Header></Header>
+      <MintDisplay style={mintDisplay}></MintDisplay>
     </Layout>
   )
 }
-
-export const Head = () => <title>Home Page</title>
 
 export default IndexPage
