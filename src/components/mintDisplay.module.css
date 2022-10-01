@@ -1,0 +1,51 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    /* border: solid 2px red; */
+    width: 60vw;
+    height: 50vh;
+    color: white;
+}
+
+.count-down {
+    width: 100%;
+
+    background-color: black;
+    padding: 2vh 5vw;
+    border-radius: 12px;
+
+    color: white;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.times {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.time {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    margin: 0 1vw;
+}
+
+.value {
+    font-size: 10vmin;
+    line-height: 1.15;
+    font-family: content;
+}
+
+.label {
+    font-size: 1vmin;
+}
