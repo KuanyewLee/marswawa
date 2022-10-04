@@ -1,9 +1,11 @@
 import * as React from 'react';
-import Header from '../components/header';
-import Layout from '../components/layout';
-import MintDisplay from '../components/mintDisplay';
-import { mintDisplay } from "./index.module.css";
+import Header from './components/header';
+import Layout from './components/layout';
+import MintDisplay from './components/mintDisplay';
+import style from "./index.module.css";
 import { useState } from "react";
+import ReactDOM from 'react-dom/client';
+import "./css/common.css";
 export var ConnectState;
 (function (ConnectState) {
     ConnectState[ConnectState["Connect"] = 0] = "Connect";
@@ -15,6 +17,7 @@ const IndexPage = () => {
     const [address, setAddress] = useState("");
     return (React.createElement(Layout, null,
         React.createElement(Header, { state: state, setState: setState, address: address, setAddress: setAddress }),
-        React.createElement(MintDisplay, { className: mintDisplay, state: state, address: address })));
+        React.createElement(MintDisplay, { className: style.mintDisplay, state: state, address: address })));
 };
-export default IndexPage;
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(React.createElement(IndexPage, null));

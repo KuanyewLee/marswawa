@@ -1,18 +1,15 @@
 import * as React from 'react'
-import {
-  container,
-  background,
-} from './layout.module.css'
-import { StaticImage } from 'gatsby-plugin-image'
+import style from './layout.module.css'
+import background from "../images/background.png"
 
 const Layout = ({ children }: any) => {
-  const backgroundUrl = "../images/background.png";
   return (
-    <div className={container}>
-      <StaticImage className={background}
-        alt="background image"
-        src={backgroundUrl}
-      />
+    <div className={style.container}>
+      {/*<StaticImage className={background}*/}
+      {/*  alt="background image"*/}
+      {/*  src={backgroundUrl}*/}
+      {/*/>*/}
+      <img className={style.background} src={background}/>
       <main>{children}</main>
     </div>
   )

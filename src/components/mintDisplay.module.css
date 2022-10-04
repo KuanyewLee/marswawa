@@ -11,7 +11,7 @@
     color: white;
 }
 
-.main-card {
+.mainCard {
     width: 100%;
 
     background-color: rgba(0,0,0,0.75);
@@ -25,13 +25,13 @@
     align-items: center;
 }
 
-.main-title {
+.mainTitle {
     margin: 1vh 0 0;
     line-height: 1.15;
     font-size: 10vmin;
     font-weight: bold;
 }
-.sub-title {
+.subTitle {
     margin: 1vh 0 0;
     font-size: 2vmin;
 }
@@ -63,7 +63,7 @@
     font-size: 1vmin;
 }
 
-.mint-button {
+.mintButton {
     margin-top: 48px;
     width: 128px;
     height: 36px;

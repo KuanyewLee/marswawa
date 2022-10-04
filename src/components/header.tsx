@@ -1,9 +1,9 @@
 import React, {useState} from "react";
-import {container, button, buttonIcon, buttonText} from "./header.module.css"
-import {StaticImage} from "gatsby-plugin-image";
+import style from "./header.module.css"
 import {StringUtils} from "../utils/StringUtils";
 import {ChainDetail, ChainId, ethereum, web3} from "../contracts/chain";
-import {ConnectState} from "../pages";
+import {ConnectState} from "../index";
+import metamask from "../images/metaMask.png"
 
 type Params = {
   state: ConnectState
@@ -60,13 +60,12 @@ const Header = ({state, setState, address, setAddress}: Params) => {
       state == ConnectState.Switch ? switch_ :
         disconnect;
 
-  const metamaskUrl = "../images/metaMask.png";
   return (
-    <div className={container}>
-      <div className={button} onClick={() => onClick?.()}>
-        <StaticImage className={buttonIcon} src={metamaskUrl} alt={"MetaMask"}/>
-        {/*<img src={require("../images/metaMask.png")}/>*/}
-        <span className={buttonText}>{text}</span>
+    <div className={style.container}>
+      <div className={style.button} onClick={() => onClick?.()}>
+        {/*<StaticImage className={buttonIcon} src={metamaskUrl} alt={"MetaMask"}/>*/}
+        <img className={style.buttonIcon} src={metamask}/>
+        <span className={style.buttonText}>{text}</span>
       </div>
     </div>
   )

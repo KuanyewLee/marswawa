@@ -28,11 +28,11 @@
     cursor: pointer;
 }
 
-.button-icon {
+.buttonIcon {
     width: 36px;
     height: 36px;
 }
-.button-text {
+.buttonText {
     width: 100%;
     text-align: center;
 }

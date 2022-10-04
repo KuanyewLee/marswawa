@@ -1,9 +1,9 @@
 import React from "react";
-import { container, button, buttonIcon, buttonText } from "./header.module.css";
-import { StaticImage } from "gatsby-plugin-image";
+import style from "./header.module.css";
 import { StringUtils } from "../utils/StringUtils";
 import { ChainDetail, ChainId, ethereum, web3 } from "../contracts/chain";
-import { ConnectState } from "../pages";
+import { ConnectState } from "../index";
+import metamask from "../images/metaMask.png";
 const Header = ({ state, setState, address, setAddress }) => {
     const connect = async () => {
         console.log("Connect", ethereum);
@@ -48,9 +48,9 @@ const Header = ({ state, setState, address, setAddress }) => {
     const onClick = state == ConnectState.Connect ? connect :
         state == ConnectState.Switch ? switch_ :
             disconnect;
-    return (React.createElement("div", { className: container },
-        React.createElement("div", { className: button, onClick: () => onClick?.() },
-            React.createElement(StaticImage, { className: buttonIcon, src: "../images/metaMask.png", alt: "MetaMask" }),
-            React.createElement("span", { className: buttonText }, text))));
+    return (React.createElement("div", { className: style.container },
+        React.createElement("div", { className: style.button, onClick: () => onClick?.() },
+            React.createElement("img", { className: style.buttonIcon, src: metamask }),
+            React.createElement("span", { className: style.buttonText }, text))));
 };
 export default Header;

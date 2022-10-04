@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { container, mainCard, mainTitle, subTitle, mintButton, disabled, times, value, time, label } from "./mintDisplay.module.css";
+import style from "./mintDisplay.module.css";
 import { DateUtils } from "../utils/DateUtils";
 import { getContract } from "../contracts/contract";
 import { web3 } from "../contracts/chain";
@@ -51,8 +51,7 @@ const MintDisplay = ({ className, address, state }) => {
             Balance: address ? await contract.methods.balanceOf(address).call() : "0"
         };
         console.log("data", data);
-        // Object.keys(data).forEach(
-        //   key => eval(`set${key}(Number(${data[key]}))`))
+        Object.keys(data).forEach(key => eval(`set${key}(Number(${data[key]}))`));
     }
     useEffect(() => { init().then(); }, []);
     useEffect(() => {
@@ -72,34 +71,34 @@ const MintDisplay = ({ className, address, state }) => {
     }, [restTime]);
     const [days, hours, minutes, seconds] = DateUtils.diff2Time(restTime);
     const timeItem = { days, hours, minutes, seconds };
-    const clock = React.createElement("div", { className: times }, Object.keys(timeItem).map(key => {
+    const clock = React.createElement("div", { className: style.times }, Object.keys(timeItem).map(key => {
         let str = timeItem[key].toString();
         if (key != "days")
             str = str.padStart(2, "0");
-        return React.createElement("div", { className: time },
-            React.createElement("div", { className: value }, str),
-            React.createElement("div", { className: label }, key));
+        return React.createElement("div", { className: style.time },
+            React.createElement("div", { className: style.value }, str),
+            React.createElement("div", { className: style.label }, key));
     }));
-    return (React.createElement("div", { className: container + " " + className },
-        React.createElement("div", { className: mainCard }, stage == Stage.Publish ?
-            React.createElement("div", { className: mainTitle }, "Sale Out") :
+    return (React.createElement("div", { className: style.container + " " + className },
+        React.createElement("div", { className: style.mainCard }, stage == Stage.Publish ?
+            React.createElement("div", { className: style.mainTitle }, "Sale Out") :
             stage == Stage.PublicSale ?
                 React.createElement(React.Fragment, null,
-                    React.createElement("div", { className: subTitle },
+                    React.createElement("div", { className: style.subTitle },
                         React.createElement("strong", null, StageTexts[stage])),
-                    React.createElement("div", { className: mainTitle },
+                    React.createElement("div", { className: style.mainTitle },
                         curSupply,
                         "/",
                         maxSupply)) :
                 React.createElement(React.Fragment, null,
-                    React.createElement("div", { className: subTitle },
+                    React.createElement("div", { className: style.subTitle },
                         React.createElement("strong", null, StageTexts[stage])),
                     clock,
-                    stage != Stage.Pending && React.createElement("div", { className: subTitle },
+                    stage != Stage.Pending && React.createElement("div", { className: style.subTitle },
                         "Progress: ",
                         stage == Stage.OGMint || stage == Stage.WLMint ?
                             `${curSupply}/${maxFreeMint}` : `${curSupply}/${maxSupply}`))),
-        React.createElement("div", { className: mintButton + " " + (!isMintEnable && disabled) },
+        React.createElement("div", { className: style.mintButton + " " + (!isMintEnable && style.disabled) },
             stage == Stage.OGMint ? "OG " : stage == Stage.WLMint ? "WL " : "",
             "Mint (",
             balance,

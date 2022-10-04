@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { container, background, } from './layout.module.css';
-import { StaticImage } from 'gatsby-plugin-image';
+import style from './layout.module.css';
+import background from "../images/background.png";
 const Layout = ({ children }) => {
-    return (React.createElement("div", { className: container },
-        React.createElement(StaticImage, { className: background, alt: "background image", src: "../images/background.png" }),
+    return (React.createElement("div", { className: style.container },
+        React.createElement("img", { className: style.background, src: background }),
         React.createElement("main", null, children)));
 };
 export default Layout;
