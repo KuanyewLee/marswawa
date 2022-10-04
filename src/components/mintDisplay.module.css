@@ -26,11 +26,14 @@
 }
 
 .main-title {
-    font-size: 4vmin;
+    margin: 1vh 0 0;
+    line-height: 1.15;
+    font-size: 10vmin;
+    font-weight: bold;
 }
 .sub-title {
-    font-size: 2vmin;
     margin: 1vh 0 0;
+    font-size: 2vmin;
 }
 
 .times {
@@ -76,4 +79,9 @@
     text-align: center;
 
     cursor: pointer;
+}
+.disabled {
+    opacity: 0.5;
+
+    cursor: not-allowed;
 }

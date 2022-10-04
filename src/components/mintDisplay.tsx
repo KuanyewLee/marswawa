@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { container, mainCard, mainTitle, subTitle, mintButton, times, value, time, label } from "./mintDisplay.module.css"
+import { container, mainCard, mainTitle, subTitle, mintButton, disabled, times, value, time, label } from "./mintDisplay.module.css"
 import { DateUtils } from "../utils/DateUtils";
 
 export const Second = 1000;
@@ -18,7 +18,7 @@ const MintDisplay = ({ style }: any) => {
 
   const [restTime, setRestTime] = useState(StartTime - Date.now());
 
-  const [stage, setStage] = useState<Stage>(Stage.OGMint);
+  const [stage, setStage] = useState<Stage>(Stage.Pending);
   const [price, setPrice] = useState(0.00777);
   const [maxFreeMint, setMaxFreeMint] = useState(1600);
   const [maxSupply, setMaxSupply] = useState(3333);
@@ -26,6 +26,18 @@ const MintDisplay = ({ style }: any) => {
   const [maxMint, setMaxMint] = useState(1);
   const [balance, setBalance] = useState(0);
   const [lastTime, setLastTime] = useState(Date.now() / 1000);
+  const [isOG, setIsOG] = useState(false);
+  const [isWL, setIsWL] = useState(false);
+
+  const isMinted = balance == maxMint;
+  const isWLMint = stage == Stage.OGMint || stage == Stage.WLMint;
+  const isSaleOut =
+    isWLMint ? curSupply >= maxFreeMint :
+      stage == Stage.PublicSale ? curSupply >= maxSupply : false;
+  const isMintEnable = !isSaleOut &&
+    (stage == Stage.OGMint ? isOG :
+      stage == Stage.WLMint ? isWL :
+        stage == Stage.PublicSale);
 
   useEffect(() => {
     setTimeout(() => {
@@ -61,22 +73,25 @@ const MintDisplay = ({ style }: any) => {
           <div className={mainTitle}>Sale Out</div> :
           stage == Stage.PublicSale ?
             <>
-              <div className={subTitle}>{StageTexts[stage]}</div>
-              <div className={mainTitle}>{balance}/{maxMint}</div>
+              <div className={subTitle}><strong>{StageTexts[stage]}</strong></div>
+              <div className={mainTitle}>{curSupply}/{maxSupply}</div>
             </> :
             <>
               <div className={subTitle}><strong>{StageTexts[stage]}</strong></div>
               {clock}
-              <div className={subTitle}>
+              {stage != Stage.Pending && <div className={subTitle}>
                 Progress: {
                  stage == Stage.OGMint || stage == Stage.WLMint ?
                    `${curSupply}/${maxFreeMint}` : `${curSupply}/${maxSupply}`
                 }
-              </div>
+              </div>}
             </>
         }
       </div>
-      <div className={mintButton}>Mint ({balance}/{maxMint})</div>
+      <div className={mintButton + " " + (!isMintEnable && disabled)}>
+        {stage == Stage.OGMint ? "OG " : stage == Stage.WLMint ? "WL " : ""}
+        Mint ({balance}/{maxMint})
+      </div>
     </div>
   )
 }
