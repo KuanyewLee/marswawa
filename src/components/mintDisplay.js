@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import style from "./mintDisplay.module.css";
 import { DateUtils } from "../utils/DateUtils";
+import { ConnectState } from "../index";
 import { getContract } from "../contracts/contract";
 import { web3 } from "../contracts/chain";
 export const Second = 1000;
@@ -18,6 +19,7 @@ export var Stage;
 export const StageTexts = ["Pending", "OG Mint", "WL Mint", "Public Sale", "Sale Out"];
 const MintDisplay = ({ className, address, state }) => {
     const [restTime, setRestTime] = useState(StartTime - Date.now());
+    const [isLoading, setIsLoading] = useState(false);
     const [stage, setStage] = useState(Stage.Pending);
     const [price, setPrice] = useState(0.00777);
     const [maxFreeMint, setMaxFreeMint] = useState(1600);
@@ -28,15 +30,7 @@ const MintDisplay = ({ className, address, state }) => {
     const [balance, setBalance] = useState(0);
     const [isOG, setIsOG] = useState(false);
     const [isWL, setIsWL] = useState(false);
-    const isMinted = balance == maxMint;
-    const isWLMint = stage == Stage.OGMint || stage == Stage.WLMint;
-    const isSaleOut = isWLMint ? curSupply >= maxFreeMint :
-        stage == Stage.PublicSale ? curSupply >= maxSupply : false;
-    const isMintEnable = !isSaleOut &&
-        (stage == Stage.OGMint ? isOG :
-            stage == Stage.WLMint ? isWL :
-                stage == Stage.PublicSale);
-    async function init() {
+    async function refreshData() {
         const contract = await getContract();
         const data = {
             Stage: await contract.methods.getStage().call(),
@@ -46,6 +40,13 @@ const MintDisplay = ({ className, address, state }) => {
             CurSupply: await contract.methods.totalSupply().call(),
             MaxMint: await contract.methods.MaxMint().call(),
             LastTime: await contract.methods.lastTime().call(),
+        };
+        console.log("data", data);
+        Object.keys(data).forEach(key => eval(`set${key}(Number(${data[key]}))`));
+    }
+    async function refreshUserData() {
+        const contract = await getContract();
+        const data = {
             IsOG: address ? await contract.methods.isOG(address).call() : "0",
             IsWL: address ? await contract.methods.isWL(address).call() : "0",
             Balance: address ? await contract.methods.balanceOf(address).call() : "0"
@@ -53,7 +54,34 @@ const MintDisplay = ({ className, address, state }) => {
         console.log("data", data);
         Object.keys(data).forEach(key => eval(`set${key}(Number(${data[key]}))`));
     }
-    useEffect(() => { init().then(); }, []);
+    async function doMint() {
+        if (!isMintEnable)
+            return;
+        try {
+            setIsLoading(true);
+            const contract = await getContract();
+            switch (stage) {
+                case Stage.OGMint:
+                    await contract.methods.ogMint(1).send({ from: address });
+                    break;
+                case Stage.WLMint:
+                    await contract.methods.wlMint(1).send({ from: address });
+                    break;
+                case Stage.PublicSale:
+                    const value = web3.utils.toWei(String(price));
+                    await contract.methods.mint(1).send({ from: address, value });
+                    break;
+                default: return;
+            }
+            await refreshData();
+            await refreshUserData();
+        }
+        finally {
+            setIsLoading(false);
+        }
+    }
+    useEffect(() => { refreshData().then(); }, []);
+    useEffect(() => { refreshUserData().then(); }, [address]);
     useEffect(() => {
         setTimeout(() => {
             let time = 0, now = Date.now();
@@ -69,6 +97,15 @@ const MintDisplay = ({ className, address, state }) => {
             setRestTime(time);
         }, 1000);
     }, [restTime]);
+    const isMinted = balance == maxMint;
+    const isWLMint = stage == Stage.OGMint || stage == Stage.WLMint;
+    const isSaleOut = isWLMint ? curSupply >= maxFreeMint :
+        stage == Stage.PublicSale ? curSupply >= maxSupply : false;
+    const isMintEnable = state == ConnectState.Connected &&
+        !isLoading && !isMinted && !isSaleOut &&
+        (stage == Stage.OGMint ? isOG :
+            stage == Stage.WLMint ? isWL :
+                stage == Stage.PublicSale);
     const [days, hours, minutes, seconds] = DateUtils.diff2Time(restTime);
     const timeItem = { days, hours, minutes, seconds };
     const clock = React.createElement("div", { className: style.times }, Object.keys(timeItem).map(key => {
@@ -98,9 +135,10 @@ const MintDisplay = ({ className, address, state }) => {
                         "Progress: ",
                         stage == Stage.OGMint || stage == Stage.WLMint ?
                             `${curSupply}/${maxFreeMint}` : `${curSupply}/${maxSupply}`))),
-        React.createElement("div", { className: style.mintButton + " " + (!isMintEnable && style.disabled) },
+        React.createElement("div", { className: style.mintButton + " " + (!isMintEnable && style.disabled), onClick: doMint },
             stage == Stage.OGMint ? "OG " : stage == Stage.WLMint ? "WL " : "",
-            "Mint (",
+            isLoading ? "Minting" : "Mint",
+            " (",
             balance,
             "/",
             maxMint,

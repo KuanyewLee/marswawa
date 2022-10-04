@@ -1,6 +1,6 @@
 import Web3 from "web3";
 
-export const TestMode = false;
+export const TestMode = true;
 
 export const MainChainId = 1;
 export const TestChainId = 1337;

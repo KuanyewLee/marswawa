@@ -18,6 +18,7 @@ const Header = ({ state, setState, address, setAddress }) => {
         }
     };
     const switch_ = async () => {
+        console.log("Switch", ChainId, ChainDetail);
         try {
             await ethereum?.request({
                 method: 'wallet_switchEthereumChain',

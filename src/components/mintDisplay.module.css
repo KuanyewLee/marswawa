@@ -65,8 +65,8 @@
 
 .mintButton {
     margin-top: 48px;
-    width: 128px;
-    height: 36px;
+    width: 192px;
+    height: 48px;
 
     color: white;
     background-color: rgba(255,255,255,0.25);
@@ -74,7 +74,7 @@
     border-radius: 8px;
 
     font-size: 20px;
-    line-height: 36px;
+    line-height: 48px;
 
     text-align: center;
 

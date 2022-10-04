@@ -26,6 +26,7 @@ type Params = {
 const MintDisplay = ({ className, address, state }: Params) => {
 
   const [restTime, setRestTime] = useState(StartTime - Date.now());
+  const [isLoading, setIsLoading] = useState(false);
 
   const [stage, setStage] = useState<Stage>(Stage.Pending);
   const [price, setPrice] = useState(0.00777);
@@ -39,17 +40,7 @@ const MintDisplay = ({ className, address, state }: Params) => {
   const [isOG, setIsOG] = useState(false);
   const [isWL, setIsWL] = useState(false);
 
-  const isMinted = balance == maxMint;
-  const isWLMint = stage == Stage.OGMint || stage == Stage.WLMint;
-  const isSaleOut =
-    isWLMint ? curSupply >= maxFreeMint :
-      stage == Stage.PublicSale ? curSupply >= maxSupply : false;
-  const isMintEnable = !isSaleOut &&
-    (stage == Stage.OGMint ? isOG :
-      stage == Stage.WLMint ? isWL :
-        stage == Stage.PublicSale);
-
-  async function init() {
+  async function refreshData() {
     const contract = await getContract();
 
     const data: Record<string, string> = {
@@ -61,7 +52,16 @@ const MintDisplay = ({ className, address, state }: Params) => {
       MaxMint: await contract.methods.MaxMint().call(),
 
       LastTime: await contract.methods.lastTime().call(),
+    }
+    console.log("data", data);
+    Object.keys(data).forEach(
+      key => eval(`set${key}(Number(${data[key]}))`))
+  }
 
+  async function refreshUserData() {
+    const contract = await getContract();
+
+    const data: Record<string, string> = {
       IsOG: address ? await contract.methods.isOG(address).call() : "0",
       IsWL: address ? await contract.methods.isWL(address).call() : "0",
       Balance: address ? await contract.methods.balanceOf(address).call() : "0"
@@ -70,7 +70,34 @@ const MintDisplay = ({ className, address, state }: Params) => {
     Object.keys(data).forEach(
       key => eval(`set${key}(Number(${data[key]}))`))
   }
-  useEffect(() => {init().then()}, []);
+
+  async function doMint() {
+    if (!isMintEnable) return;
+    try {
+      setIsLoading(true)
+      const contract = await getContract();
+      switch (stage) {
+        case Stage.OGMint:
+          await contract.methods.ogMint(1).send({ from: address });
+          break;
+        case Stage.WLMint:
+          await contract.methods.wlMint(1).send({ from: address });
+          break;
+        case Stage.PublicSale:
+          const value = web3.utils.toWei(String(price));
+          await contract.methods.mint(1).send({from: address, value});
+          break;
+        default: return;
+      }
+      await refreshData();
+      await refreshUserData();
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  useEffect(() => {refreshData().then()}, []);
+  useEffect(() => {refreshUserData().then()}, [address]);
 
   useEffect(() => {
     setTimeout(() => {
@@ -84,6 +111,17 @@ const MintDisplay = ({ className, address, state }: Params) => {
       setRestTime(time)
     }, 1000);
   }, [restTime]);
+
+  const isMinted = balance == maxMint;
+  const isWLMint = stage == Stage.OGMint || stage == Stage.WLMint;
+  const isSaleOut =
+    isWLMint ? curSupply >= maxFreeMint :
+      stage == Stage.PublicSale ? curSupply >= maxSupply : false;
+  const isMintEnable = state == ConnectState.Connected &&
+    !isLoading && !isMinted && !isSaleOut &&
+    (stage == Stage.OGMint ? isOG :
+      stage == Stage.WLMint ? isWL :
+        stage == Stage.PublicSale);
 
   const [days, hours, minutes, seconds] = DateUtils.diff2Time(restTime);
   const timeItem: any = { days, hours, minutes, seconds };
@@ -121,9 +159,10 @@ const MintDisplay = ({ className, address, state }: Params) => {
             </>
         }
       </div>
-      <div className={style.mintButton + " " + (!isMintEnable && style.disabled)}>
+      <div className={style.mintButton + " " + (!isMintEnable && style.disabled)}
+           onClick={doMint}>
         {stage == Stage.OGMint ? "OG " : stage == Stage.WLMint ? "WL " : ""}
-        Mint ({balance}/{maxMint})
+        {isLoading ? "Minting" : "Mint"} ({balance}/{maxMint})
       </div>
     </div>
   )
