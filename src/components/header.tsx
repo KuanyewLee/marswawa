@@ -1,10 +1,15 @@
 import React from "react";
-import {container, connectWallet} from "./header.module.css"
+import {container, button, buttonIcon, buttonText} from "./header.module.css"
+import {StaticImage} from "gatsby-plugin-image";
 
-const Header = ({ style }: any) => {
+const Header = () => {
     return (
-        <div className={container + " " + style}>
-            <button className={connectWallet}>连接钱包</button>
+        <div className={container}>
+          <div className={button}>
+            <StaticImage className={buttonIcon} src={"../images/metaMask.png"} alt={"MetaMask"}/>
+            {/*<img src={require("../images/metaMask.png")}/>*/}
+            <span className={buttonText}>Connect</span>
+          </div>
         </div>
     )
 }

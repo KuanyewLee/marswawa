@@ -7,8 +7,8 @@ import {mintDisplay} from "./index.module.css"
 const IndexPage = () => {
   return (
     <Layout>
-      <Header></Header>
-      <MintDisplay style={mintDisplay}></MintDisplay>
+      <Header/>
+      <MintDisplay style={mintDisplay}/>
     </Layout>
   )
 }
