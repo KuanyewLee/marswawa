@@ -1,6 +1,6 @@
 import Web3 from "web3";
 
-export const TestMode = true;
+export const TestMode = false;
 
 export const MainChainId = 1;
 export const TestChainId = 1337;
@@ -33,7 +33,7 @@ export const TestChainDetail: Chain = {
     decimals: 18,
   }
 }
-export const MainChainDetail =  {
+export const MainChainDetail = {
   chainId: web3.utils.toHex(MainChainId),
   chainName: 'Ethereum',
   rpcUrls: ['https://mainnet.infura.io/v3/'],

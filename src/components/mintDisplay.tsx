@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { container, mainCard, mainTitle, subTitle, mintButton, disabled, times, value, time, label } from "./mintDisplay.module.css"
 import { DateUtils } from "../utils/DateUtils";
+import {ConnectState} from "../pages";
+import {getContract} from "../contracts/contract";
+import {web3} from "../contracts/chain";
 
 export const Second = 1000;
 export const Minute = 60 * Second;
@@ -14,7 +17,13 @@ export enum Stage {
 
 export const StageTexts = ["Pending", "OG Mint", "WL Mint", "Public Sale", "Sale Out"];
 
-const MintDisplay = ({ style }: any) => {
+type Params = {
+  className: string
+  address: string
+  state: ConnectState
+}
+
+const MintDisplay = ({ className, address, state }: Params) => {
 
   const [restTime, setRestTime] = useState(StartTime - Date.now());
 
@@ -24,8 +33,9 @@ const MintDisplay = ({ style }: any) => {
   const [maxSupply, setMaxSupply] = useState(3333);
   const [curSupply, setCurSupply] = useState(0);
   const [maxMint, setMaxMint] = useState(1);
-  const [balance, setBalance] = useState(0);
   const [lastTime, setLastTime] = useState(Date.now() / 1000);
+
+  const [balance, setBalance] = useState(0);
   const [isOG, setIsOG] = useState(false);
   const [isWL, setIsWL] = useState(false);
 
@@ -38,6 +48,29 @@ const MintDisplay = ({ style }: any) => {
     (stage == Stage.OGMint ? isOG :
       stage == Stage.WLMint ? isWL :
         stage == Stage.PublicSale);
+
+  async function init() {
+    const contract = await getContract();
+
+    const data: Record<string, string> = {
+      Stage: await contract.methods.getStage().call(),
+      Price: web3.utils.fromWei(await contract.methods.PublicPrice().call()),
+      MaxFreeMint: await contract.methods.FreeMintCount().call(),
+      MaxSupply: await contract.methods.MaxSupply().call(),
+      CurSupply: await contract.methods.totalSupply().call(),
+      MaxMint: await contract.methods.MaxMint().call(),
+
+      LastTime: await contract.methods.lastTime().call(),
+
+      IsOG: address ? await contract.methods.isOG(address).call() : "0",
+      IsWL: address ? await contract.methods.isWL(address).call() : "0",
+      Balance: address ? await contract.methods.balanceOf(address).call() : "0"
+    }
+    console.log("data", data);
+    // Object.keys(data).forEach(
+    //   key => eval(`set${key}(Number(${data[key]}))`))
+  }
+  useEffect(() => {init().then()}, []);
 
   useEffect(() => {
     setTimeout(() => {
@@ -67,7 +100,7 @@ const MintDisplay = ({ style }: any) => {
   </div>
 
   return (
-    <div className={container + " " + style}>
+    <div className={container + " " + className}>
       <div className={mainCard}>
         {stage == Stage.Publish ?
           <div className={mainTitle}>Sale Out</div> :
