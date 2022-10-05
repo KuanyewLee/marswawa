@@ -1,6 +1,5 @@
 import marswawa from "./marswawa.json";
-import { web3 } from "./chain";
-const Address = "0xb9c4259dCAa3688DE5de8E1B5a23fdB824fca14a";
+import { Address, web3 } from "./chain";
 let contract;
 export async function getContract() {
     if (!contract) {

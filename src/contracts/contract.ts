@@ -3,9 +3,7 @@ import marswawa from "./marswawa.json";
 import {Contract} from "web3-eth-contract";
 import {AbiItem} from "web3-utils";
 
-import {ChainId, web3} from "./chain";
-
-const Address = "0xb9c4259dCAa3688DE5de8E1B5a23fdB824fca14a";
+import {ChainId, Address, web3} from "./chain";
 
 let contract: Contract;
 export async function getContract() {
