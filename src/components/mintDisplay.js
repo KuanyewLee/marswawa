@@ -7,7 +7,7 @@ import { web3 } from "../contracts/chain";
 export const Second = 1000;
 export const Minute = 60 * Second;
 export const Hour = 60 * Minute;
-export const StartTime = new Date(2022, 9, 8, 14).getTime();
+export const StartTime = new Date(2022, 9, 6, 18).getTime();
 export var Stage;
 (function (Stage) {
     Stage[Stage["Pending"] = 0] = "Pending";
@@ -26,7 +26,11 @@ const MintDisplay = ({ className, address, state }) => {
     const [maxSupply, setMaxSupply] = useState(3333);
     const [curSupply, setCurSupply] = useState(0);
     const [maxMint, setMaxMint] = useState(1);
+    const [reverseCount, setReserveCount] = useState(200);
     const [lastTime, setLastTime] = useState(Date.now() / 1000);
+    const [ogCount, setOGCount] = useState(0);
+    const [wlCount, setWLCount] = useState(0);
+    const [mintCount, setMintCount] = useState(0);
     const [balance, setBalance] = useState(0);
     const [isOG, setIsOG] = useState(false);
     const [isWL, setIsWL] = useState(false);
@@ -39,6 +43,10 @@ const MintDisplay = ({ className, address, state }) => {
             MaxSupply: await contract.methods.MaxSupply().call(),
             CurSupply: await contract.methods.totalSupply().call(),
             MaxMint: await contract.methods.MaxMint().call(),
+            ReserveCount: await contract.methods.ReserveCount().call(),
+            OGCount: await contract.methods.ogCount().call(),
+            WLCount: await contract.methods.wlCount().call(),
+            MintCount: await contract.methods.mintCount().call(),
             LastTime: await contract.methods.lastTime().call(),
         };
         console.log("data", data);
@@ -94,8 +102,10 @@ const MintDisplay = ({ className, address, state }) => {
                     time = lastTime * Second + 3 * Hour - now;
                     break;
             }
+            if (time <= 0)
+                refreshData().then();
             setRestTime(time);
-        }, 1000);
+        }, restTime < 0 ? 3000 : 1000);
     }, [restTime]);
     const isMinted = balance == maxMint;
     const isWLMint = stage == Stage.OGMint || stage == Stage.WLMint;
@@ -109,13 +119,14 @@ const MintDisplay = ({ className, address, state }) => {
     const [days, hours, minutes, seconds] = DateUtils.diff2Time(restTime);
     const timeItem = { days, hours, minutes, seconds };
     const clock = React.createElement("div", { className: style.times }, Object.keys(timeItem).map(key => {
-        let str = timeItem[key].toString();
+        let str = Math.max(0, timeItem[key]).toString();
         if (key != "days")
             str = str.padStart(2, "0");
         return React.createElement("div", { className: style.time },
             React.createElement("div", { className: style.value }, str),
             React.createElement("div", { className: style.label }, key));
     }));
+    const curMintCount = maxSupply - reverseCount - mintCount;
     return (React.createElement("div", { className: style.container + " " + className },
         React.createElement("div", { className: style.mainCard }, stage == Stage.Publish ?
             React.createElement("div", { className: style.mainTitle }, "Sale Out") :
@@ -134,7 +145,7 @@ const MintDisplay = ({ className, address, state }) => {
                     stage != Stage.Pending && React.createElement("div", { className: style.subTitle },
                         "Progress: ",
                         stage == Stage.OGMint || stage == Stage.WLMint ?
-                            `${curSupply}/${maxFreeMint}` : `${curSupply}/${maxSupply}`))),
+                            `${curMintCount}/${maxFreeMint}` : `${curMintCount}/${maxSupply}`))),
         React.createElement("div", { className: style.mintButton + " " + (!isMintEnable && style.disabled), onClick: doMint },
             stage == Stage.OGMint ? "OG " : stage == Stage.WLMint ? "WL " : "",
             isLoading ? "Minting" : "Mint",

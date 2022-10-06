@@ -3,9 +3,11 @@ import Web3 from "web3";
 export const TestMode = true;
 
 export const MainChainId = 1;
-export const TestChainId = 80001; // 1337
 export const MainAddress = "";
-export const TestAddress = "0x800faFF8937cD786Ea5f7b740001F8BfF9EEf11F";
+// export const TestChainId = 1337
+// export const TestAddress = "0xb9c4259dCAa3688DE5de8E1B5a23fdB824fca14a";
+export const TestChainId = 80001;
+export const TestAddress = "0xF8759b8575cbFEee5667094B032384c3c326eE7f";
 export const ChainId = TestMode ? TestChainId : MainChainId;
 export const Address = TestMode ? TestAddress : MainAddress;
 
