@@ -1,7 +1,7 @@
 import Web3 from "web3";
-export const TestMode = true;
+export const TestMode = false;
 export const MainChainId = 1;
-export const MainAddress = "";
+export const MainAddress = "0x2b73c3049E3605285912Bc0273256e4085337A24";
 // export const TestChainId = 1337
 // export const TestAddress = "0xb9c4259dCAa3688DE5de8E1B5a23fdB824fca14a";
 export const TestChainId = 80001;

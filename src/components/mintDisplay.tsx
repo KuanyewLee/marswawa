@@ -9,7 +9,7 @@ export const Second = 1000;
 export const Minute = 60 * Second;
 export const Hour = 60 * Minute;
 
-export const StartTime = new Date(2022, 9, 6, 18).getTime();
+export const StartTime = new Date(2022, 9, 8, 20).getTime();
 
 export enum Stage {
   Pending, OGMint, WLMint, PublicSale, Publish
