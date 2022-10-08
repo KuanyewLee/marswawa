@@ -4,7 +4,7 @@ let contract;
 export async function getContract() {
     if (!contract) {
         contract = new web3.eth.Contract(marswawa, Address);
-        console.log("== contract ==", { contract });
+        // console.log("== contract ==", {contract});
     }
     return contract;
 }

@@ -9,7 +9,7 @@ export const Second = 1000;
 export const Minute = 60 * Second;
 export const Hour = 60 * Minute;
 
-export const StartTime = new Date(2022, 9, 8, 20).getTime();
+export const StartTime = 1665219600000; // new Date(2022, 9, 8, 20).getTime();
 
 export enum Stage {
   Pending, OGMint, WLMint, PublicSale, Publish
@@ -172,6 +172,7 @@ const MintDisplay = ({ className, address, state }: Params) => {
             </>
         }
       </div>
+      {isOG ? <div>You are OG!</div> : isWL ? <div>You are WL!</div> : <div/>}
       <div className={style.mintButton + " " + (!isMintEnable && style.disabled)}
            onClick={doMint}>
         {stage == Stage.OGMint ? "OG " : stage == Stage.WLMint ? "WL " : ""}

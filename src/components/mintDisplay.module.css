@@ -17,6 +17,7 @@
     background-color: rgba(0,0,0,0.75);
     padding: 2vh 5vw;
     border-radius: 12px;
+    margin-bottom: 32px;
 
     color: white;
 
@@ -64,9 +65,10 @@
 }
 
 .mintButton {
-    margin-top: 48px;
     width: 192px;
     height: 48px;
+
+    margin-top: 16px;
 
     color: white;
     background-color: rgba(255,255,255,0.25);

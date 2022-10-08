@@ -7,7 +7,7 @@ import { web3 } from "../contracts/chain";
 export const Second = 1000;
 export const Minute = 60 * Second;
 export const Hour = 60 * Minute;
-export const StartTime = new Date(2022, 9, 8, 20).getTime();
+export const StartTime = 1665219600000; // new Date(2022, 9, 8, 20).getTime();
 export var Stage;
 (function (Stage) {
     Stage[Stage["Pending"] = 0] = "Pending";
@@ -146,6 +146,7 @@ const MintDisplay = ({ className, address, state }) => {
                         "Progress: ",
                         stage == Stage.OGMint || stage == Stage.WLMint ?
                             `${curMintCount}/${maxFreeMint}` : `${curMintCount}/${maxSupply}`))),
+        isOG ? React.createElement("div", null, "You are OG!") : isWL ? React.createElement("div", null, "You are WL!") : React.createElement("div", null),
         React.createElement("div", { className: style.mintButton + " " + (!isMintEnable && style.disabled), onClick: doMint },
             stage == Stage.OGMint ? "OG " : stage == Stage.WLMint ? "WL " : "",
             isLoading ? "Minting" : "Mint",
