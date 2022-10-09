@@ -9,7 +9,7 @@ export const Second = 1000;
 export const Minute = 60 * Second;
 export const Hour = 60 * Minute;
 
-export const StartTime = 1665219600000; // new Date(2022, 9, 8, 20).getTime();
+export const StartTime = 1665219600000; // new Date(2022, 9, 8, 16).getTime();
 
 export enum Stage {
   Pending, OGMint, WLMint, PublicSale, Publish
@@ -123,7 +123,7 @@ const MintDisplay = ({ className, address, state }: Params) => {
     }, restTime < 0 ? 3000 : 1000);
   }, [restTime]);
 
-  const isMinted = balance == maxMint;
+  const isMinted = balance >= maxMint;
   const isWLMint = stage == Stage.OGMint || stage == Stage.WLMint;
   const isSaleOut =
     isWLMint ? curSupply >= maxFreeMint :

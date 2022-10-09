@@ -7,7 +7,7 @@ import { web3 } from "../contracts/chain";
 export const Second = 1000;
 export const Minute = 60 * Second;
 export const Hour = 60 * Minute;
-export const StartTime = 1665219600000; // new Date(2022, 9, 8, 20).getTime();
+export const StartTime = 1665219600000; // new Date(2022, 9, 8, 16).getTime();
 export var Stage;
 (function (Stage) {
     Stage[Stage["Pending"] = 0] = "Pending";
@@ -107,7 +107,7 @@ const MintDisplay = ({ className, address, state }) => {
             setRestTime(time);
         }, restTime < 0 ? 3000 : 1000);
     }, [restTime]);
-    const isMinted = balance == maxMint;
+    const isMinted = balance >= maxMint;
     const isWLMint = stage == Stage.OGMint || stage == Stage.WLMint;
     const isSaleOut = isWLMint ? curSupply >= maxFreeMint :
         stage == Stage.PublicSale ? curSupply >= maxSupply : false;

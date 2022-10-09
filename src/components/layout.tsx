@@ -1,6 +1,6 @@
 import * as React from 'react'
 import style from './layout.module.css'
-import background from "../images/background.png"
+import background from "../images/background.jpg"
 
 const Layout = ({ children }: any) => {
   return (
